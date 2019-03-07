@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>闭包的理解 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="闭包的定义 函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
+  <meta name="description" content="闭包的定义函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="闭包的理解">
 <meta property="og:url" content="http://yoursite.com/2019/03/06/closure/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="闭包的定义 函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
+<meta property="og:description" content="闭包的定义函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-06T11:44:33.516Z">
+<meta property="og:updated_time" content="2019-03-07T03:19:10.951Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="闭包的理解">
-<meta name="twitter:description" content="闭包的定义 函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
+<meta name="twitter:description" content="闭包的定义函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域） 下面是一个定时函数形成的闭包的例子1234567function waitSomeTime(msg,time)&amp;#123;        setTimeOut(function()&amp;#123;">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -180,8 +180,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="闭包的定义"><a href="#闭包的定义" class="headerlink" title="闭包的定义"></a>闭包的定义</h2><hr>
-<p>函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域）</p>
+        <h2 id="闭包的定义"><a href="#闭包的定义" class="headerlink" title="闭包的定义"></a>闭包的定义</h2><p>函数可以记住并访问所在的词法作用域，就产生了闭包，即使函数是在当前词法作用域外执行（某个函数在定义时的词法作用域之外的地方被调用，闭包可以使该函数可以访问定义时的词法作用域）</p>
 <h3 id="下面是一个定时函数形成的闭包的例子"><a href="#下面是一个定时函数形成的闭包的例子" class="headerlink" title="下面是一个定时函数形成的闭包的例子"></a>下面是一个定时函数形成的闭包的例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function waitSomeTime(msg,time)&#123;</span><br><span class="line">        setTimeOut(function()&#123;</span><br><span class="line">            console.log(msg)</span><br><span class="line">        &#125;,time)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">waitSomeTime(&apos;yosang&apos;,1000)</span><br></pre></td></tr></table></figure>
 <p>这里的匿名函数会在waitSomeTome函数执行完以后才开始执行，所以它是在它的词法作用域外调用的，但是它可以访问定义它时的词法作用域,所以它能输出yosang</p>
 <h3 id="经典例子：for循环中使用定时器延迟打印的例子"><a href="#经典例子：for循环中使用定时器延迟打印的例子" class="headerlink" title="经典例子：for循环中使用定时器延迟打印的例子"></a>经典例子：for循环中使用定时器延迟打印的例子</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for(var i=1; i&lt;=10; i++)&#123;</span><br><span class="line">    setTimeOut(function()&#123;</span><br><span class="line">        console.log(i)</span><br><span class="line">    &#125;,1000)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -191,7 +190,16 @@
 <blockquote>
 <p>定义模块，将操作函数暴露给外部，而细节隐藏在模块内部</p>
 </blockquote>
-<h2 id="js的垃圾回收机制"><a href="#js的垃圾回收机制" class="headerlink" title="js的垃圾回收机制"></a>js的垃圾回收机制</h2>
+<h2 id="js的垃圾回收机制"><a href="#js的垃圾回收机制" class="headerlink" title="js的垃圾回收机制"></a>js的垃圾回收机制</h2><p>js是具有自动垃圾回收机制的编程语言，主要有两种方式：<br>1.标记清除</p>
+<blockquote>
+<p>这是javascript中最常用的垃圾回收方式。当变量进入执行环境是，就标记这个变量为“进入环境”。从逻辑上讲，永远不能释放进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用到他们。当变量离开环境时，则将其标记为“离开环境”。<br>垃圾收集器在运行的时候会给存储在内存中的所有变量都加上标记。然后，它会去掉环境中的变量以及被环境中的变量引用的标记。而在此之后再被加上标记的变量将被视为准备删除的变量，原因是环境中的变量已经无法访问到这些变量了。最后。垃圾收集器完成内存清除工作，销毁那些带标记的值，并回收他们所占用的内存空间。</p>
+</blockquote>
+<p>2.引用计数</p>
+<blockquote>
+<p>引用计数的含义是跟踪记录每个值被引用的次数。当声明了一个变量并将一个引用类型赋值给该变量时，则这个值的引用次数就是1。相反，如果包含对这个值引用的变量又取得了另外一个值，则这个值的引用次数就减1。当这个引用次数变成0时，则说明没有办法再访问这个值了，因而就可以将其所占的内存空间给收回来。这样，垃圾收集器下次再运行时，它就会释放那些引用次数为0的值所占的内存。</p>
+</blockquote>
+<p>如果两个对象相互引用，那么就不能通过引用计数方式回收它们，如果这种情况大量存在就可能会造成内存泄漏。<br>闭包里面的变量不能通过自动垃圾回收机制来回收，所以要通过将用完的函数或变量置为null来回收它</p>
+
       
 
       
