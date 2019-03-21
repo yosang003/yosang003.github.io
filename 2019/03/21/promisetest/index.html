@@ -6,15 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2019/3 | Hexo</title>
+  <title>promisetest | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2019/03/index.html">
+  <meta name="description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="promisetest">
+<meta property="og:url" content="http://yoursite.com/2019/03/21/promisetest/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-03-21T03:07:49.911Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="promisetest">
+<meta name="twitter:description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -156,151 +160,374 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-promisetest" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      promisetest
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/21/promisetest/" class="archive-article-date">
+
+        
+        <a href="/2019/03/21/promisetest/" class="archive-article-date">
   	<time datetime="2019-03-21T03:07:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-21</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/21/promisetest/">promisetest</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>//按Promise/A+规范来实现promise</p>
+<p>/**</p>
+<ul>
+<li></li>
+<li><p>@param {<em>} executor 默认在new的时候自动执行
+</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined; </p>
+<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
+<pre><code>//防止重复更新状态，状态只能更改一次
+if(self.status === &quot;pending&quot;){
+    self.status = &quot;resolved&quot;;
+    self.value = value;
+}
+</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
+<pre><code>if(self.status === &quot;pending&quot;){
+    self.status = &quot;rejected&quot;;
+    self.reason = reason;
+}
+</code></pre><p> }</p>
+<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
+<pre><code>executor(resolve,reject);
+</code></pre><p> }catch(error){</p>
+<pre><code>reject(error)
+</code></pre><p> }</p>
+</li>
+</ul>
+<p>}</p>
+<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    let self = this;</p>
+<pre><code>if(self.status === &quot;resolved&quot;){
+    onfulfilled(self.value);
+}
 
-        <div class="article-info info-on-right">
-          
-          
+if(self.status === &quot;rejected&quot;){
+    onrejected(self.reason)
+}
+</code></pre><p>}</p>
+<p>思考1:以上的执行流程是按同步的思维进行的，new Promise -&gt; 执行executor -&gt; executor更新status以及相应的value,reason<br> -&gt; 执行Promise.then() -&gt; 根据当前的状态选择执行onfulfilled还是onrejected<br> 如果executor里面包含异步操作，则会先执行同步操作，所以then执行时状态还处于pending状态，value,reason也没有更新。<br> 当同步代码执行完毕后，执行异步代码时，更改了状态为resolved或者rejected时，此时then方法已经执行完毕了，不会再次执行then的方法，那么此时我们该如何处理？<br> 思考2:同一个promise可以then多次，在executor执行成功后，要执行所有then的成功时的方法，在executor执行失败后，要执行所有then的失败时的方法，这又要如何实现呢？</p>
+<p> /**</p>
+<ul>
+<li></li>
+<li><p>@param {<em>} executor 默认在new的时候自动执行
+</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined;<br> //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数<br> self.onRejectedCallback = [];<br> self.onResolvedCallback = []</p>
+<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
+<pre><code>//防止重复更新状态，状态只能更改一次
+if(self.status === &quot;pending&quot;){
+    self.status = &quot;resolved&quot;;
+    self.value = value;
+    //状态改变为resolved的时候再统一执行所有的成功执行函数
+    self.onResolvedCallback.forEach(fn =&gt; fn());
+}
+</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
+<pre><code>if(self.status === &quot;pending&quot;){
+    self.status = &quot;rejected&quot;;
+    self.reason = reason;
+    //状态改变为rejected的时候再统一执行所有的成功执行函数
+    self.onRejectedCallback.forEach(fn =&gt; fn());
+}
+</code></pre><p> }</p>
+<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
+<pre><code>executor(resolve,reject);
+</code></pre><p> }catch(error){</p>
+<pre><code>reject(error)
+</code></pre><p> }</p>
+</li>
+</ul>
+<p>}</p>
+<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    let self = this;</p>
+<pre><code>if(self.status === &quot;resolved&quot;){
+    onfulfilled(self.value);
+}
 
+if(self.status === &quot;rejected&quot;){
+    onrejected(self.reason)
+}
+
+if(self.status === &quot;pending&quot;){
+    //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参
+    self.onResolvedCallback.push(()=&gt;{
+        onfulfilled(self.value);
+    })
+    self.onRejectedCallback.push(()=&gt;{
+        onrejected(self.reason)
+    })
+}
+</code></pre><p>}</p>
+<p>以上是一个简易版的promise的实现，但是并未接触到它的一个核心部分:链式调用<br>promise主要解决以下两个问题：<br>1.回调地狱<br>2.并发异步io操作，同一时间将这个结果拿到，即比如有两个异步io操作，当这2个获取完毕后，才执行相应的代码，比如前面所说的after函数，发布订阅、Promise.all等</p>
+<p>并且我们可以得到如下结论：<br>1.如果一个promise执行完后，返回的还是一个promise，会把这个promise的执行结果会传递给下一次then中<br>2.如果在then中返回的不是一个promise，而是一个普通值，会将这个普通值作为下次then的成功的结果<br>3.如果当前then中失败了，会走下一个then的失败回调<br>4.如果在then中不返回值，虽然没有显式返回，但是默认是返回undefined，是属于普通值，依然会把这个普通值传到下一个then的成功回调中<br>5.catch是错误没有处理的情况下才会执行<br>6.then中可以不写东西</p>
+<p>接下来来实现promise的链式调用<br> /**</p>
+<ul>
+<li></li>
+<li><p>@param {<em>} executor 默认在new的时候自动执行
+</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined;<br> //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数<br> self.onRejectedCallback = [];<br> self.onResolvedCallback = []</p>
+<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
+<pre><code>//防止重复更新状态，状态只能更改一次
+if(self.status === &quot;pending&quot;){
+    self.status = &quot;resolved&quot;;
+    self.value = value;
+    //状态改变为resolved的时候再统一执行所有的成功执行函数
+    self.onResolvedCallback.forEach(fn =&gt; fn());
+}
+</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
+<pre><code>if(self.status === &quot;pending&quot;){
+    self.status = &quot;rejected&quot;;
+    self.reason = reason;
+    //状态改变为rejected的时候再统一执行所有的成功执行函数
+    self.onRejectedCallback.forEach(fn =&gt; fn());
+}
+</code></pre><p> }</p>
+<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
+<pre><code>executor(resolve,reject);
+</code></pre><p> }catch(error){</p>
+<pre><code>reject(error)
+</code></pre><p> }</p>
+</li>
+</ul>
+<p>}</p>
+<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    // onFulfilled、onRejected是可选参数<br>    onFulfilled = typeof onFulfilled === ‘function’?onFulfilled:val=&gt;val;<br>    onRejected = typeof onRejected === ‘function’?onRejected: err=&gt;{throw err}<br>    let self = this;<br>    let promise2 ; //promise链式调用时，返回给下一个then的是一个新的promise对象，所以我们这里声明一个新的promise对象</p>
+<pre><code>//这个promise根据上一个promise的执行返回值x来决定
+promise2 = new Promise((resolve,reject){
+    if(self.status === &quot;resolved&quot;){
+        setTimeout(()=&gt;{
+            try{
+                //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，
+                //可能是抛出的错误，所以我们需要一个函数去处理这些情况
+                let x = onfulfilled(self.value);
+                resolvePromise(promise2,x,resolve,reject)
+            }catch(error){
+                //注意这里的reject是promise2的reject
+                reject(error)
+            }
+        },0) 
+    }
+
+    if(self.status === &quot;rejected&quot;){
+        setTimeout(()=&gt;{
+            try{
+                let x = onrejected(self.reason)
+                resolvePromise(promise2,x,resolve,reject)
+            }catch(error){
+                reject(error)
+            }
+        },0) 
+    }
+
+    if(self.status === &quot;pending&quot;){
+        //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参
+        self.onResolvedCallback.push(()=&gt;{
+            setTimeout(()=&gt;{
+                try{
+                    //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，
+                    //可能是抛出的错误，所以我们需要一个函数去处理这些情况
+                    let x = onfulfilled(self.value);
+                    resolvePromise(promise2,x,resolve,reject)
+                }catch(error){
+                    //注意这里的reject是promise2的reject
+                    reject(error)
+                }
+            },0) 
+
+        })
+        self.onRejectedCallback.push(()=&gt;{
+            setTimeout(()=&gt;{
+                try{
+                    let x = onrejected(self.reason)
+                    resolvePromise(promise2,x,resolve,reject)
+                }catch(error){
+                    reject(error)
+                }
+            },0)  
+        })
+    }
+})
+
+
+
+return promise2;
+</code></pre><p>}</p>
+<p>//写一个resolvePromise函数<br>/**</p>
+<ul>
+<li></li>
+<li>@param {*} promise2 then的返回值，返回新的promise</li>
+<li>@param {*} x then中成功函数或者失败函数的返回值</li>
+<li>@param {*} resolve promise2的resolve</li>
+<li><p>@param {<em>} reject  promise2的reject
+</em>/<br>function resolvePromise(promise2,x,resolve,reject){<br> if(promise2 === x){</p>
+<pre><code>//陷入了死循环
+// promise2的成功或失败是要取决于promise中then的返回结果，而返回的却是promi2自己
+</code></pre><p> // 这样就陷入死循环了，promise2是依赖于promise的then返回的结果，<br> // 而then返回的结果是promise2，而then中的promise2，既不是成功也不是失败，不能自己等于自己</p>
+<pre><code>return reject(new TypeError(&apos;Chaining cycle detected for promise&apos;))
+</code></pre><p> }</p>
+<p> let called;<br> //只有x的类型为function或者object时才有可能返回的时promise<br> if(x !== null &amp;&amp; (typeof x === ‘function’ || typeof x === ‘object’)){</p>
+<pre><code>try{
+    //通过这个来判断是否promise,是否异常
+    let then = x.then;
+    if(typeof then === &apos;function&apos;){
+        //这里用call方法是防止then里面的this不指向x
+        then.call(x,(y)=&gt;{
+            if(called) return;
+            called = true;
+            //promise2永远是要返回的promise
+            resolvePromise(promise2,y,resolve,reject)
+        },(error)=&gt;{
+            if(called) return;
+            called = true;
+            reject(error)
+        })
+    }else{
+        resolve(x)
+    }
+}catch(error){
+    if(called) return;
+    called = true;
+    reject(error);
+}
+</code></pre><p> }else{</p>
+<pre><code>//x为常量，直接resolve
+resolve(x)
+</code></pre><p> }<br>}</p>
+</li>
+</ul>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/03/21/promisetest/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/20/promisetest/" class="archive-article-date">
-  	<time datetime="2019-03-20T08:36:21.832Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-20</time>
-</a>
-        </div>
-    	 
-        <div class="article-info info-on-right">
-          
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/11/interviewoftencent1/" class="archive-article-date">
-  	<time datetime="2019-03-11T12:14:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-11</time>
-</a>
-        </div>
-    	 
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/11/interviewoftencent1/">悲惨的腾讯一面</a>
-    </h1>
+  
+    <a href="/2019/03/20/promisetest/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title"></div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/07/jsbasic/" class="archive-article-date">
-  	<time datetime="2019-03-07T03:20:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/07/jsbasic/">js基础知识总结</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2019/03/06/closure/" class="archive-article-date">
-  	<time datetime="2019-03-06T06:43:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-03-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/03/06/closure/">闭包的理解</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -323,8 +550,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
