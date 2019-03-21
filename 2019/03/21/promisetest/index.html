@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>promisetest | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
+  <meta name="description" content="按Promise/A+规范来实现promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950/** *  * @param &amp;#123;*&amp;#125; executor 默认在new的时候自动执行 */function Promise(executor)&amp;#123">
 <meta property="og:type" content="article">
 <meta property="og:title" content="promisetest">
 <meta property="og:url" content="http://yoursite.com/2019/03/21/promisetest/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
+<meta property="og:description" content="按Promise/A+规范来实现promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950/** *  * @param &amp;#123;*&amp;#125; executor 默认在new的时候自动执行 */function Promise(executor)&amp;#123">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-21T03:07:49.911Z">
+<meta property="og:updated_time" content="2019-03-21T03:10:19.240Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="promisetest">
-<meta name="twitter:description" content="//按Promise/A+规范来实现promise /**   @param {} executor 默认在new的时候自动执行 /function Promise(executor){ let self = this; //promise有三种状态(pending,resolved,rejected) self.status = “pending”; //value代表executor成功执行时">
+<meta name="twitter:description" content="按Promise/A+规范来实现promise1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950/** *  * @param &amp;#123;*&amp;#125; executor 默认在new的时候自动执行 */function Promise(executor)&amp;#123">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -180,226 +180,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>//按Promise/A+规范来实现promise</p>
-<p>/**</p>
-<ul>
-<li></li>
-<li><p>@param {<em>} executor 默认在new的时候自动执行
-</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined; </p>
-<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
-<pre><code>//防止重复更新状态，状态只能更改一次
-if(self.status === &quot;pending&quot;){
-    self.status = &quot;resolved&quot;;
-    self.value = value;
-}
-</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
-<pre><code>if(self.status === &quot;pending&quot;){
-    self.status = &quot;rejected&quot;;
-    self.reason = reason;
-}
-</code></pre><p> }</p>
-<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
-<pre><code>executor(resolve,reject);
-</code></pre><p> }catch(error){</p>
-<pre><code>reject(error)
-</code></pre><p> }</p>
-</li>
-</ul>
-<p>}</p>
-<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    let self = this;</p>
-<pre><code>if(self.status === &quot;resolved&quot;){
-    onfulfilled(self.value);
-}
-
-if(self.status === &quot;rejected&quot;){
-    onrejected(self.reason)
-}
-</code></pre><p>}</p>
+        <h2 id="按Promise-A-规范来实现promise"><a href="#按Promise-A-规范来实现promise" class="headerlink" title="按Promise/A+规范来实现promise"></a>按Promise/A+规范来实现promise</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * </span><br><span class="line"> * @param &#123;*&#125; executor 默认在new的时候自动执行</span><br><span class="line"> */</span><br><span class="line">function Promise(executor)&#123;</span><br><span class="line">    let self = this;</span><br><span class="line">    //promise有三种状态(pending,resolved,rejected)</span><br><span class="line">    self.status = &quot;pending&quot;;</span><br><span class="line">    //value代表executor成功执行时要传递的值</span><br><span class="line">    self.value = undefined;</span><br><span class="line">    //reason代表executor执行失败时要传递的原因</span><br><span class="line">    self.reason = undefined; </span><br><span class="line"></span><br><span class="line">    //executor成功执行,调用它更改当前的状态</span><br><span class="line">    function resolve(value)&#123;</span><br><span class="line">        //防止重复更新状态，状态只能更改一次</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;resolved&quot;;</span><br><span class="line">            self.value = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //executor执行失败,调用它更改当前的状态</span><br><span class="line">    function reject(reason)&#123;</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;rejected&quot;;</span><br><span class="line">            self.reason = reason;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败</span><br><span class="line">    try&#123;</span><br><span class="line">        executor(resolve,reject);</span><br><span class="line">    &#125;catch(error)&#123;</span><br><span class="line">        reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//每个promise都有一个then方法</span><br><span class="line">Promise.prototype.then = function (onFulfilled,onRejected)&#123;</span><br><span class="line">    let self = this;</span><br><span class="line"></span><br><span class="line">    if(self.status === &quot;resolved&quot;)&#123;</span><br><span class="line">        onfulfilled(self.value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(self.status === &quot;rejected&quot;)&#123;</span><br><span class="line">        onrejected(self.reason)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
 <p>思考1:以上的执行流程是按同步的思维进行的，new Promise -&gt; 执行executor -&gt; executor更新status以及相应的value,reason<br> -&gt; 执行Promise.then() -&gt; 根据当前的状态选择执行onfulfilled还是onrejected<br> 如果executor里面包含异步操作，则会先执行同步操作，所以then执行时状态还处于pending状态，value,reason也没有更新。<br> 当同步代码执行完毕后，执行异步代码时，更改了状态为resolved或者rejected时，此时then方法已经执行完毕了，不会再次执行then的方法，那么此时我们该如何处理？<br> 思考2:同一个promise可以then多次，在executor执行成功后，要执行所有then的成功时的方法，在executor执行失败后，要执行所有then的失败时的方法，这又要如何实现呢？</p>
-<p> /**</p>
-<ul>
-<li></li>
-<li><p>@param {<em>} executor 默认在new的时候自动执行
-</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined;<br> //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数<br> self.onRejectedCallback = [];<br> self.onResolvedCallback = []</p>
-<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
-<pre><code>//防止重复更新状态，状态只能更改一次
-if(self.status === &quot;pending&quot;){
-    self.status = &quot;resolved&quot;;
-    self.value = value;
-    //状态改变为resolved的时候再统一执行所有的成功执行函数
-    self.onResolvedCallback.forEach(fn =&gt; fn());
-}
-</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
-<pre><code>if(self.status === &quot;pending&quot;){
-    self.status = &quot;rejected&quot;;
-    self.reason = reason;
-    //状态改变为rejected的时候再统一执行所有的成功执行函数
-    self.onRejectedCallback.forEach(fn =&gt; fn());
-}
-</code></pre><p> }</p>
-<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
-<pre><code>executor(resolve,reject);
-</code></pre><p> }catch(error){</p>
-<pre><code>reject(error)
-</code></pre><p> }</p>
-</li>
-</ul>
-<p>}</p>
-<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    let self = this;</p>
-<pre><code>if(self.status === &quot;resolved&quot;){
-    onfulfilled(self.value);
-}
-
-if(self.status === &quot;rejected&quot;){
-    onrejected(self.reason)
-}
-
-if(self.status === &quot;pending&quot;){
-    //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参
-    self.onResolvedCallback.push(()=&gt;{
-        onfulfilled(self.value);
-    })
-    self.onRejectedCallback.push(()=&gt;{
-        onrejected(self.reason)
-    })
-}
-</code></pre><p>}</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line"> * </span><br><span class="line"> * @param &#123;*&#125; executor 默认在new的时候自动执行</span><br><span class="line"> */</span><br><span class="line">function Promise(executor)&#123;</span><br><span class="line">    let self = this;</span><br><span class="line">    //promise有三种状态(pending,resolved,rejected)</span><br><span class="line">    self.status = &quot;pending&quot;;</span><br><span class="line">    //value代表executor成功执行时要传递的值</span><br><span class="line">    self.value = undefined;</span><br><span class="line">    //reason代表executor执行失败时要传递的原因</span><br><span class="line">    self.reason = undefined; </span><br><span class="line">    //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数</span><br><span class="line">    self.onRejectedCallback = [];</span><br><span class="line">    self.onResolvedCallback = []</span><br><span class="line"></span><br><span class="line">    //executor成功执行,调用它更改当前的状态</span><br><span class="line">    function resolve(value)&#123;</span><br><span class="line">        //防止重复更新状态，状态只能更改一次</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;resolved&quot;;</span><br><span class="line">            self.value = value;</span><br><span class="line">            //状态改变为resolved的时候再统一执行所有的成功执行函数</span><br><span class="line">            self.onResolvedCallback.forEach(fn =&gt; fn());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //executor执行失败,调用它更改当前的状态</span><br><span class="line">    function reject(reason)&#123;</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;rejected&quot;;</span><br><span class="line">            self.reason = reason;</span><br><span class="line">            //状态改变为rejected的时候再统一执行所有的成功执行函数</span><br><span class="line">            self.onRejectedCallback.forEach(fn =&gt; fn());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败</span><br><span class="line">    try&#123;</span><br><span class="line">        executor(resolve,reject);</span><br><span class="line">    &#125;catch(error)&#123;</span><br><span class="line">        reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//每个promise都有一个then方法</span><br><span class="line">Promise.prototype.then = function (onFulfilled,onRejected)&#123;</span><br><span class="line">    let self = this;</span><br><span class="line"></span><br><span class="line">    if(self.status === &quot;resolved&quot;)&#123;</span><br><span class="line">        onfulfilled(self.value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(self.status === &quot;rejected&quot;)&#123;</span><br><span class="line">        onrejected(self.reason)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">        //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参</span><br><span class="line">        self.onResolvedCallback.push(()=&gt;&#123;</span><br><span class="line">            onfulfilled(self.value);</span><br><span class="line">        &#125;)</span><br><span class="line">        self.onRejectedCallback.push(()=&gt;&#123;</span><br><span class="line">            onrejected(self.reason)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
 <p>以上是一个简易版的promise的实现，但是并未接触到它的一个核心部分:链式调用<br>promise主要解决以下两个问题：<br>1.回调地狱<br>2.并发异步io操作，同一时间将这个结果拿到，即比如有两个异步io操作，当这2个获取完毕后，才执行相应的代码，比如前面所说的after函数，发布订阅、Promise.all等</p>
+</blockquote>
 <p>并且我们可以得到如下结论：<br>1.如果一个promise执行完后，返回的还是一个promise，会把这个promise的执行结果会传递给下一次then中<br>2.如果在then中返回的不是一个promise，而是一个普通值，会将这个普通值作为下次then的成功的结果<br>3.如果当前then中失败了，会走下一个then的失败回调<br>4.如果在then中不返回值，虽然没有显式返回，但是默认是返回undefined，是属于普通值，依然会把这个普通值传到下一个then的成功回调中<br>5.catch是错误没有处理的情况下才会执行<br>6.then中可以不写东西</p>
-<p>接下来来实现promise的链式调用<br> /**</p>
-<ul>
-<li></li>
-<li><p>@param {<em>} executor 默认在new的时候自动执行
-</em>/<br>function Promise(executor){<br> let self = this;<br> //promise有三种状态(pending,resolved,rejected)<br> self.status = “pending”;<br> //value代表executor成功执行时要传递的值<br> self.value = undefined;<br> //reason代表executor执行失败时要传递的原因<br> self.reason = undefined;<br> //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数<br> self.onRejectedCallback = [];<br> self.onResolvedCallback = []</p>
-<p> //executor成功执行,调用它更改当前的状态<br> function resolve(value){</p>
-<pre><code>//防止重复更新状态，状态只能更改一次
-if(self.status === &quot;pending&quot;){
-    self.status = &quot;resolved&quot;;
-    self.value = value;
-    //状态改变为resolved的时候再统一执行所有的成功执行函数
-    self.onResolvedCallback.forEach(fn =&gt; fn());
-}
-</code></pre><p> }<br> //executor执行失败,调用它更改当前的状态<br> function reject(reason){</p>
-<pre><code>if(self.status === &quot;pending&quot;){
-    self.status = &quot;rejected&quot;;
-    self.reason = reason;
-    //状态改变为rejected的时候再统一执行所有的成功执行函数
-    self.onRejectedCallback.forEach(fn =&gt; fn());
-}
-</code></pre><p> }</p>
-<p> //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败<br> try{</p>
-<pre><code>executor(resolve,reject);
-</code></pre><p> }catch(error){</p>
-<pre><code>reject(error)
-</code></pre><p> }</p>
-</li>
-</ul>
-<p>}</p>
-<p>//每个promise都有一个then方法<br>Promise.prototype.then = function (onFulfilled,onRejected){<br>    // onFulfilled、onRejected是可选参数<br>    onFulfilled = typeof onFulfilled === ‘function’?onFulfilled:val=&gt;val;<br>    onRejected = typeof onRejected === ‘function’?onRejected: err=&gt;{throw err}<br>    let self = this;<br>    let promise2 ; //promise链式调用时，返回给下一个then的是一个新的promise对象，所以我们这里声明一个新的promise对象</p>
-<pre><code>//这个promise根据上一个promise的执行返回值x来决定
-promise2 = new Promise((resolve,reject){
-    if(self.status === &quot;resolved&quot;){
-        setTimeout(()=&gt;{
-            try{
-                //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，
-                //可能是抛出的错误，所以我们需要一个函数去处理这些情况
-                let x = onfulfilled(self.value);
-                resolvePromise(promise2,x,resolve,reject)
-            }catch(error){
-                //注意这里的reject是promise2的reject
-                reject(error)
-            }
-        },0) 
-    }
-
-    if(self.status === &quot;rejected&quot;){
-        setTimeout(()=&gt;{
-            try{
-                let x = onrejected(self.reason)
-                resolvePromise(promise2,x,resolve,reject)
-            }catch(error){
-                reject(error)
-            }
-        },0) 
-    }
-
-    if(self.status === &quot;pending&quot;){
-        //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参
-        self.onResolvedCallback.push(()=&gt;{
-            setTimeout(()=&gt;{
-                try{
-                    //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，
-                    //可能是抛出的错误，所以我们需要一个函数去处理这些情况
-                    let x = onfulfilled(self.value);
-                    resolvePromise(promise2,x,resolve,reject)
-                }catch(error){
-                    //注意这里的reject是promise2的reject
-                    reject(error)
-                }
-            },0) 
-
-        })
-        self.onRejectedCallback.push(()=&gt;{
-            setTimeout(()=&gt;{
-                try{
-                    let x = onrejected(self.reason)
-                    resolvePromise(promise2,x,resolve,reject)
-                }catch(error){
-                    reject(error)
-                }
-            },0)  
-        })
-    }
-})
-
-
-
-return promise2;
-</code></pre><p>}</p>
-<p>//写一个resolvePromise函数<br>/**</p>
-<ul>
-<li></li>
-<li>@param {*} promise2 then的返回值，返回新的promise</li>
-<li>@param {*} x then中成功函数或者失败函数的返回值</li>
-<li>@param {*} resolve promise2的resolve</li>
-<li><p>@param {<em>} reject  promise2的reject
-</em>/<br>function resolvePromise(promise2,x,resolve,reject){<br> if(promise2 === x){</p>
-<pre><code>//陷入了死循环
-// promise2的成功或失败是要取决于promise中then的返回结果，而返回的却是promi2自己
-</code></pre><p> // 这样就陷入死循环了，promise2是依赖于promise的then返回的结果，<br> // 而then返回的结果是promise2，而then中的promise2，既不是成功也不是失败，不能自己等于自己</p>
-<pre><code>return reject(new TypeError(&apos;Chaining cycle detected for promise&apos;))
-</code></pre><p> }</p>
-<p> let called;<br> //只有x的类型为function或者object时才有可能返回的时promise<br> if(x !== null &amp;&amp; (typeof x === ‘function’ || typeof x === ‘object’)){</p>
-<pre><code>try{
-    //通过这个来判断是否promise,是否异常
-    let then = x.then;
-    if(typeof then === &apos;function&apos;){
-        //这里用call方法是防止then里面的this不指向x
-        then.call(x,(y)=&gt;{
-            if(called) return;
-            called = true;
-            //promise2永远是要返回的promise
-            resolvePromise(promise2,y,resolve,reject)
-        },(error)=&gt;{
-            if(called) return;
-            called = true;
-            reject(error)
-        })
-    }else{
-        resolve(x)
-    }
-}catch(error){
-    if(called) return;
-    called = true;
-    reject(error);
-}
-</code></pre><p> }else{</p>
-<pre><code>//x为常量，直接resolve
-resolve(x)
-</code></pre><p> }<br>}</p>
-</li>
-</ul>
-
+<h2 id="接下来来实现promise的链式调用"><a href="#接下来来实现promise的链式调用" class="headerlink" title="接下来来实现promise的链式调用"></a>接下来来实现promise的链式调用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line"> * </span><br><span class="line"> * @param &#123;*&#125; executor 默认在new的时候自动执行</span><br><span class="line"> */</span><br><span class="line">function Promise(executor)&#123;</span><br><span class="line">    let self = this;</span><br><span class="line">    //promise有三种状态(pending,resolved,rejected)</span><br><span class="line">    self.status = &quot;pending&quot;;</span><br><span class="line">    //value代表executor成功执行时要传递的值</span><br><span class="line">    self.value = undefined;</span><br><span class="line">    //reason代表executor执行失败时要传递的原因</span><br><span class="line">    self.reason = undefined; </span><br><span class="line">    //用数组来分别保存所有的then方法中的成功时的执行函数和失败时的执行函数</span><br><span class="line">    self.onRejectedCallback = [];</span><br><span class="line">    self.onResolvedCallback = []</span><br><span class="line"></span><br><span class="line">    //executor成功执行,调用它更改当前的状态</span><br><span class="line">    function resolve(value)&#123;</span><br><span class="line">        //防止重复更新状态，状态只能更改一次</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;resolved&quot;;</span><br><span class="line">            self.value = value;</span><br><span class="line">            //状态改变为resolved的时候再统一执行所有的成功执行函数</span><br><span class="line">            self.onResolvedCallback.forEach(fn =&gt; fn());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    //executor执行失败,调用它更改当前的状态</span><br><span class="line">    function reject(reason)&#123;</span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            self.status = &quot;rejected&quot;;</span><br><span class="line">            self.reason = reason;</span><br><span class="line">            //状态改变为rejected的时候再统一执行所有的成功执行函数</span><br><span class="line">            self.onRejectedCallback.forEach(fn =&gt; fn());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //在执行executor时可能会出现异常，用try catch捕获后直接调用reject更改状态为执行失败</span><br><span class="line">    try&#123;</span><br><span class="line">        executor(resolve,reject);</span><br><span class="line">    &#125;catch(error)&#123;</span><br><span class="line">        reject(error)</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//每个promise都有一个then方法</span><br><span class="line">Promise.prototype.then = function (onFulfilled,onRejected)&#123;</span><br><span class="line">    // onFulfilled、onRejected是可选参数</span><br><span class="line">    onFulfilled = typeof onFulfilled === &apos;function&apos;?onFulfilled:val=&gt;val;</span><br><span class="line">    onRejected = typeof onRejected === &apos;function&apos;?onRejected: err=&gt;&#123;throw err&#125;</span><br><span class="line">    let self = this;</span><br><span class="line">    let promise2 ; //promise链式调用时，返回给下一个then的是一个新的promise对象，所以我们这里声明一个新的promise对象</span><br><span class="line"></span><br><span class="line">    //这个promise根据上一个promise的执行返回值x来决定</span><br><span class="line">    promise2 = new Promise((resolve,reject)&#123;</span><br><span class="line">        if(self.status === &quot;resolved&quot;)&#123;</span><br><span class="line">            setTimeout(()=&gt;&#123;</span><br><span class="line">                try&#123;</span><br><span class="line">                    //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，</span><br><span class="line">                    //可能是抛出的错误，所以我们需要一个函数去处理这些情况</span><br><span class="line">                    let x = onfulfilled(self.value);</span><br><span class="line">                    resolvePromise(promise2,x,resolve,reject)</span><br><span class="line">                &#125;catch(error)&#123;</span><br><span class="line">                    //注意这里的reject是promise2的reject</span><br><span class="line">                    reject(error)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,0) </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if(self.status === &quot;rejected&quot;)&#123;</span><br><span class="line">            setTimeout(()=&gt;&#123;</span><br><span class="line">                try&#123;</span><br><span class="line">                    let x = onrejected(self.reason)</span><br><span class="line">                    resolvePromise(promise2,x,resolve,reject)</span><br><span class="line">                &#125;catch(error)&#123;</span><br><span class="line">                    reject(error)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,0) </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if(self.status === &quot;pending&quot;)&#123;</span><br><span class="line">            //将成功时执行函数先存储在数组中，稍后执行；这里现将参数传进去，避免遍历数组的时候再传参</span><br><span class="line">            self.onResolvedCallback.push(()=&gt;&#123;</span><br><span class="line">                setTimeout(()=&gt;&#123;</span><br><span class="line">                    try&#123;</span><br><span class="line">                        //这里的x其实就是这个then函数里面的返回值，这个返回值可能是promise,可能是普通值，</span><br><span class="line">                        //可能是抛出的错误，所以我们需要一个函数去处理这些情况</span><br><span class="line">                        let x = onfulfilled(self.value);</span><br><span class="line">                        resolvePromise(promise2,x,resolve,reject)</span><br><span class="line">                    &#125;catch(error)&#123;</span><br><span class="line">                        //注意这里的reject是promise2的reject</span><br><span class="line">                        reject(error)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,0) </span><br><span class="line">               </span><br><span class="line">            &#125;)</span><br><span class="line">            self.onRejectedCallback.push(()=&gt;&#123;</span><br><span class="line">                setTimeout(()=&gt;&#123;</span><br><span class="line">                    try&#123;</span><br><span class="line">                        let x = onrejected(self.reason)</span><br><span class="line">                        resolvePromise(promise2,x,resolve,reject)</span><br><span class="line">                    &#125;catch(error)&#123;</span><br><span class="line">                        reject(error)</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,0)  </span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    return promise2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//写一个resolvePromise函数</span><br><span class="line">/**</span><br><span class="line"> * </span><br><span class="line"> * @param &#123;*&#125; promise2 then的返回值，返回新的promise</span><br><span class="line"> * @param &#123;*&#125; x then中成功函数或者失败函数的返回值</span><br><span class="line"> * @param &#123;*&#125; resolve promise2的resolve</span><br><span class="line"> * @param &#123;*&#125; reject  promise2的reject</span><br><span class="line"> */</span><br><span class="line">function resolvePromise(promise2,x,resolve,reject)&#123;</span><br><span class="line">    if(promise2 === x)&#123;</span><br><span class="line">         //陷入了死循环</span><br><span class="line">         // promise2的成功或失败是要取决于promise中then的返回结果，而返回的却是promi2自己</span><br><span class="line">    // 这样就陷入死循环了，promise2是依赖于promise的then返回的结果，</span><br><span class="line">    // 而then返回的结果是promise2，而then中的promise2，既不是成功也不是失败，不能自己等于自己</span><br><span class="line">        return reject(new TypeError(&apos;Chaining cycle detected for promise&apos;))</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    let called;</span><br><span class="line">    //只有x的类型为function或者object时才有可能返回的时promise</span><br><span class="line">    if(x !== null &amp;&amp; (typeof x === &apos;function&apos; || typeof x === &apos;object&apos;))&#123;</span><br><span class="line">        try&#123;</span><br><span class="line">            //通过这个来判断是否promise,是否异常</span><br><span class="line">            let then = x.then;</span><br><span class="line">            if(typeof then === &apos;function&apos;)&#123;</span><br><span class="line">                //这里用call方法是防止then里面的this不指向x</span><br><span class="line">                then.call(x,(y)=&gt;&#123;</span><br><span class="line">                    if(called) return;</span><br><span class="line">                    called = true;</span><br><span class="line">                    //promise2永远是要返回的promise</span><br><span class="line">                    resolvePromise(promise2,y,resolve,reject)</span><br><span class="line">                &#125;,(error)=&gt;&#123;</span><br><span class="line">                    if(called) return;</span><br><span class="line">                    called = true;</span><br><span class="line">                    reject(error)</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                resolve(x)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch(error)&#123;</span><br><span class="line">            if(called) return;</span><br><span class="line">            called = true;</span><br><span class="line">            reject(error);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        //x为常量，直接resolve</span><br><span class="line">        resolve(x)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
 
       
